@@ -6,6 +6,7 @@ Built an end-to-end batch data pipeline on Google Cloud Platform that ingests da
 - **Data Processing**: Clean and transform data locally or in the cloud
 - **Data Warehouse**: Load processed data into BigQuery and create aggregated tables
 - **Dashboard**: Streamlit app with two key metric tiles (Total Revenue, Total Orders) and daily sales chart
+- link to dash board   https://orange-lamp-v6gp9w6566jvhpq56-8501.app.github.dev/
 
 ## Setup
 1. Install dependencies:
