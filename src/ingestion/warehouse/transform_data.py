@@ -51,6 +51,11 @@ def build_clean_orders_table():
     job_config = bigquery.QueryJobConfig(
         destination=destination,
         write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE,
+        time_partitioning=bigquery.TimePartitioning(
+            type_=bigquery.TimePartitioningType.DAY,
+            field="InvoiceDateOnly",
+        ),
+        clustering_fields=["Country", "CustomerID"],
     )
     job = client.query(query, job_config=job_config)
     job.result()
@@ -65,6 +70,11 @@ def build_aggregate_table():
     job_config = bigquery.QueryJobConfig(
         destination=destination,
         write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE,
+        time_partitioning=bigquery.TimePartitioning(
+            type_=bigquery.TimePartitioningType.DAY,
+            field="order_date",
+        ),
+        clustering_fields=["unique_customers"],
     )
     job = client.query(query, job_config=job_config)
     job.result()

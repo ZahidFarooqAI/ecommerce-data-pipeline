@@ -1,0 +1,13 @@
+ecommerce_pipeline:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: service-account
+      project: your-gcp-project-id
+      dataset: ecommerce
+      keyfile: /absolute/path/to/keys/gcp-key.json
+      threads: 4
+      job_execution_timeout_seconds: 300
+      location: US
+      priority: interactive

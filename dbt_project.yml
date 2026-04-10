@@ -1,0 +1,21 @@
+name: ecommerce_pipeline_dbt
+version: 1.0.0
+config-version: 2
+
+profile: ecommerce_pipeline
+
+model-paths: ["dbt/models"]
+seed-paths: ["dbt/seeds"]
+macro-paths: ["dbt/macros"]
+test-paths: ["dbt/tests"]
+
+clean-targets:
+  - target
+  - dbt_packages
+
+models:
+  ecommerce_pipeline_dbt:
+    staging:
+      +materialized: table
+    marts:
+      +materialized: table

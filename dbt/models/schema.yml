@@ -1,0 +1,30 @@
+version: 2
+
+sources:
+  - name: raw
+    database: your-gcp-project-id
+    schema: ecommerce
+    tables:
+      - name: raw_orders
+
+models:
+  - name: stg_clean_orders
+    description: Cleaned order-level data used for downstream analytics.
+    columns:
+      - name: InvoiceNo
+        tests:
+          - not_null
+      - name: InvoiceDateOnly
+        tests:
+          - not_null
+      - name: TotalPrice
+        tests:
+          - not_null
+
+  - name: fct_daily_sales_summary
+    description: Daily aggregate metrics powering the dashboard.
+    columns:
+      - name: order_date
+        tests:
+          - not_null
+          - unique
