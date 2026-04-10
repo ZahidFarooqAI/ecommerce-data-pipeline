@@ -1,0 +1,17 @@
+project_id   = "your-gcp-project-id"
+region       = "us-central1"
+location     = "US"
+bucket_name  = "your-ecommerce-data-lake-bucket"
+dataset_name = "ecommerce"
+environment  = "dev"
+create_artifact_registry = true
+artifact_registry_repository_id = "ecommerce-dashboard"
+deploy_dashboard = false
+dashboard_service_name = "ecommerce-dashboard"
+dashboard_container_image = "us-central1-docker.pkg.dev/your-gcp-project-id/ecommerce-dashboard/dashboard:latest"
+dashboard_container_port = 8080
+dashboard_allow_unauthenticated = true
+
+labels = {
+  owner = "student-project"
+}

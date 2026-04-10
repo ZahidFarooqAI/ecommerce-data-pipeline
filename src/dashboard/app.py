@@ -23,6 +23,10 @@ except ImportError:
     bigquery = None
 
 
+def get_dashboard_data_source():
+    return os.getenv("DASHBOARD_DATA_SOURCE", "auto").strip().lower()
+
+
 def load_local_data():
     csv_path = Path(PROCESSED_FILE)
     if not csv_path.exists():
@@ -41,14 +45,9 @@ def load_bigquery_data():
         st.stop()
 
     credentials_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS") or GOOGLE_CREDENTIALS
-    if not Path(credentials_path).exists():
-        st.error(
-            f"GCP credentials not found: {credentials_path}. "
-            "Set GOOGLE_APPLICATION_CREDENTIALS or update src/config.py."
-        )
-        st.stop()
+    if credentials_path and Path(credentials_path).exists():
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials_path
 
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials_path
     client = bigquery.Client(project=BIGQUERY_PROJECT)
     query = f"""
         SELECT order_date, total_orders, total_revenue, total_quantity, unique_customers
@@ -75,42 +74,66 @@ def main():
         "This dashboard displays key metrics from the cleaned ecommerce dataset."
     )
 
-    # Default to local processed CSV
-    df = load_local_data()
-    df["InvoiceDate"] = pd.to_datetime(df["InvoiceDate"])
-    df["InvoiceDateOnly"] = df["InvoiceDate"].dt.date
-    daily = df.groupby("InvoiceDateOnly").agg(
-        total_orders=("InvoiceNo", "nunique"),
-        total_revenue=("TotalPrice", "sum"),
-        total_quantity=("Quantity", "sum"),
-    ).reset_index()
+    data_source = get_dashboard_data_source()
+    using_bigquery = data_source == "bigquery"
 
-    # Categorical distribution: Top 10 countries by revenue
-    country_revenue = df.groupby("Country")["TotalPrice"].sum().sort_values(ascending=False).head(10)
+    if data_source == "bigquery":
+        daily = load_bigquery_data()
+    else:
+        local_path = Path(PROCESSED_FILE)
+        if data_source == "local" or local_path.exists():
+            df = load_local_data()
+            df["InvoiceDate"] = pd.to_datetime(df["InvoiceDate"])
+            df["InvoiceDateOnly"] = df["InvoiceDate"].dt.date
+            daily = df.groupby("InvoiceDateOnly").agg(
+                total_orders=("InvoiceNo", "nunique"),
+                total_revenue=("TotalPrice", "sum"),
+                total_quantity=("Quantity", "sum"),
+            ).reset_index()
+        else:
+            daily = load_bigquery_data()
+            using_bigquery = True
 
-    build_tiles(df)
+    country_revenue = None
+    if not using_bigquery:
+        country_revenue = df.groupby("Country")["TotalPrice"].sum().sort_values(ascending=False).head(10)
 
-    # Create two columns for the graphs
+    build_tiles(daily if using_bigquery else df)
+
     col1, col2 = st.columns(2)
 
     with col1:
-        st.subheader("Revenue by Country (Top 10)")
-        st.bar_chart(country_revenue)
+        if using_bigquery:
+            st.subheader("Daily Orders")
+            st.bar_chart(
+                daily.set_index("order_date")["total_orders"].rename("Orders")
+            )
+        else:
+            st.subheader("Revenue by Country (Top 10)")
+            st.bar_chart(country_revenue)
 
     with col2:
         st.subheader("Daily Revenue Trend")
         st.line_chart(
-            daily.set_index("InvoiceDateOnly")["total_revenue"].rename("Revenue")
+            daily.set_index("order_date" if using_bigquery else "InvoiceDateOnly")["total_revenue"].rename("Revenue")
         )
 
     with st.expander("Daily summary table"):
-        st.dataframe(daily.sort_values("InvoiceDateOnly", ascending=False).head(50))
+        sort_column = "order_date" if using_bigquery else "InvoiceDateOnly"
+        st.dataframe(daily.sort_values(sort_column, ascending=False).head(50))
 
     st.sidebar.markdown("## Notes")
-    st.sidebar.markdown(
-        "- Data source: `data/processed_data.csv`\n"
-        "- Run `python src/ingestion/processing/clean_data.py` to refresh data."
-    )
+    if using_bigquery:
+        st.sidebar.markdown(
+            "- Data source: BigQuery aggregate table\n"
+            f"- Table: `{BIGQUERY_PROJECT}.{BIGQUERY_DATASET}.{BIGQUERY_AGG_TABLE}`\n"
+            "- Runtime: container/cloud friendly mode"
+        )
+    else:
+        st.sidebar.markdown(
+            "- Data source: `data/processed_data.csv`\n"
+            "- Run `python src/ingestion/processing/clean_data.py` to refresh data."
+        )
 
 
 if __name__ == "__main__":

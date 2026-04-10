@@ -1,0 +1,15 @@
+.git
+.gitignore
+.terraform
+.venv
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+keys/
+terraform/
+notebooks/
+data/processed_data.csv

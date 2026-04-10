@@ -34,6 +34,7 @@ venv.bak/
 # IDE
 .vscode/
 .idea/
+.codex
 *.swp
 *.swo
 *~
@@ -59,3 +60,14 @@ keys/
 # Temporary files
 *.tmp
 *.temp
+
+# Terraform
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
