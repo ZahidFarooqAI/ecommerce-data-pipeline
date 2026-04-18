@@ -13,8 +13,7 @@ This repository is designed to score well against the peer-review rubric because
 - a dashboard with at least 2 tiles
 - reproducible local and cloud run instructions
 
-Dashboard demo:
-`https://orange-lamp-v6gp9w6566jvhpq56-8501.app.github.dev/`
+
 
 ## Dashboard Screenshots
 
