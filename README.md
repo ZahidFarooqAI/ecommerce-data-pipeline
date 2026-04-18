@@ -16,6 +16,13 @@ This repository is designed to score well against the peer-review rubric because
 Dashboard demo:
 `https://orange-lamp-v6gp9w6566jvhpq56-8501.app.github.dev/`
 
+## Dashboard Screenshots
+
+Here are screenshots of the Streamlit dashboard displaying key ecommerce metrics:
+
+![Dashboard 1](images/dashboard/dashboard1.jpg.JPG)
+![Dashboard 2](images/dashboard/dashboad2.jpg.JPG)
+
 ## Final Review Submission
 
 Submission links:
@@ -86,18 +93,6 @@ If you are reviewing this repository against the course rubric, the fastest path
 2. Run `python test_pipeline.py` for a local smoke test.
 3. Run `docker compose up --build` to launch the dashboard locally.
 4. Inspect the cloud and dbt assets in `terraform/` and `dbt/`.
-
-Expected rubric score target:
-
-| Criterion | Expected Score | Evidence |
-|-----------|----------------|----------|
-| Problem description | 4/4 | This README sections below |
-| Cloud + IaC | 4/4 | `terraform/` modules for GCS, BigQuery, Artifact Registry, Cloud Run |
-| Batch orchestration | 4/4 | `src/ingestion/run_pipeline.py` |
-| Data warehouse | 4/4 | Partitioned and clustered BigQuery tables |
-| Transformations | 4/4 | Python SQL flow plus dbt models in `dbt/models/` |
-| Dashboard | 4/4 | Streamlit KPIs and charts in `src/dashboard/app.py` |
-| Reproducibility | 4/4 | Docker, local Python, Terraform, and dbt instructions |
 
 Local validation status:
 
