@@ -13,7 +13,82 @@ This project demonstrates a production-ready data pipeline with the following co
 - a dashboard with multiple KPI tiles and visualizations
 - reproducible setup instructions for local and cloud deployments
 
+## Project Structure
 
+```
+ecommerce-data-pipeline/
+├── dbt_project.yml
+├── docker-compose.yml
+├── Dockerfile
+├── README.md
+├── requirements.txt
+├── test_pipeline.py
+├── data/
+│   ├── data.csv
+│   └── processed_data.csv
+├── dbt/
+│   ├── profiles.yml.example
+│   ├── README.md
+│   └── models/
+│       ├── schema.yml
+│       ├── marts/
+│       │   └── fct_daily_sales_summary.sql
+│       └── staging/
+│           └── stg_clean_orders.sql
+├── images/
+│   └── dashboard/
+├── keys/
+│   └── gcp-key.json
+├── notebooks/
+│   └── data_exploration.ipynb
+├── processing/
+├── src/
+│   ├── __init__.py
+│   ├── config.py
+│   ├── dashboard/
+│   │   ├── __init__.py
+│   │   └── app.py
+│   └── ingestion/
+│       ├── __init__.py
+│       ├── run_pipeline.py
+│       ├── upload_to_gcs.py
+│       ├── processing/
+│       │   ├── __init__.py
+│       │   └── clean_data.py
+│       ├── sql/
+│       │   ├── aggregate_orders.sql
+│       │   └── clean_orders.sql
+│       └── warehouse/
+│           ├── __init__.py
+│           ├── load_to_bigquery.py
+│           └── transform_data.py
+├── terraform/
+│   ├── main.tf
+│   ├── outputs.tf
+│   ├── providers.tf
+│   ├── README.md
+│   ├── terraform.tfvars.example
+│   ├── variables.tf
+│   ├── versions.tf
+│   └── modules/
+│       ├── artifact_registry/
+│       │   ├── main.tf
+│       │   ├── outputs.tf
+│       │   └── variables.tf
+│       ├── bigquery/
+│       │   ├── main.tf
+│       │   ├── outputs.tf
+│       │   └── variables.tf
+│       ├── cloud_run_dashboard/
+│       │   ├── main.tf
+│       │   ├── outputs.tf
+│       │   └── variables.tf
+│       └── gcs_bucket/
+│           ├── main.tf
+│           ├── outputs.tf
+│           └── variables.tf
+└── warehouse/
+```
 
 ## Dashboard Screenshots
 
