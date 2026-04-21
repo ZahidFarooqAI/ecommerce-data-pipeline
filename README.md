@@ -1,17 +1,17 @@
-# ecommerce-data-pipeline
+# ecommerce-data-pipeline - Data Engineering Zoomcamp final project 2026
 
 An end-to-end batch analytics pipeline for ecommerce transactions built on Google Cloud. The project solves a simple business problem: raw order data is difficult to query directly, so the pipeline ingests the source CSV, cleans invalid records, stores files in a cloud data lake, loads structured data into BigQuery, builds analytics-ready tables, and serves a dashboard with business KPIs.
 
-This repository is designed to score well against the peer-review rubric because it includes:
+This project demonstrates a production-ready data pipeline with the following components:
 
-- a clear problem statement
-- cloud services on GCP
+- a clear problem statement and business context
+- cloud services on Google Cloud Platform (GCP)
 - infrastructure as code with Terraform
-- an end-to-end batch pipeline
+- an end-to-end batch processing pipeline
 - a data warehouse layer in BigQuery
-- transformations in both Python SQL flow and optional dbt models
-- a dashboard with at least 2 tiles
-- reproducible local and cloud run instructions
+- transformations in both Python and SQL with optional dbt models
+- a dashboard with multiple KPI tiles and visualizations
+- reproducible setup instructions for local and cloud deployments
 
 
 
@@ -84,14 +84,14 @@ export DASHBOARD_DATA_SOURCE=bigquery
 streamlit run src/dashboard/app.py
 ```
 
-## Peer Review Quick View
+## Quick Start for Verification
 
-If you are reviewing this repository against the course rubric, the fastest path is:
+The fastest path to understand and test this pipeline is:
 
-1. Read the problem statement and rubric mapping in this README.
+1. Review the problem statement and architecture in this README.
 2. Run `python test_pipeline.py` for a local smoke test.
 3. Run `docker compose up --build` to launch the dashboard locally.
-4. Inspect the cloud and dbt assets in `terraform/` and `dbt/`.
+4. Inspect the cloud infrastructure and dbt models in `terraform/` and `dbt/` directories.
 
 Local validation status:
 
@@ -132,9 +132,9 @@ Main components:
 - `terraform/`: Infrastructure as Code for GCS, BigQuery, Artifact Registry, and optional Cloud Run
 - `dbt/`: optional dbt transformation layer that mirrors the warehouse models
 
-## Rubric Mapping
+## Technical Implementation Detail
 
-### Problem description
+### Problem Statement
 
 The project solves the problem of converting raw ecommerce transaction data into analytics-ready tables and business dashboards that answer revenue, order volume, customer activity, and country-level performance questions.
 
@@ -331,6 +331,18 @@ If you want to demonstrate a dedicated transformation tool:
    dbt test
    ```
 
+## Project Structure
+
+- `data/data.csv`: raw ecommerce dataset
+- `data/processed_data.csv`: cleaned dataset generated locally
+- `src/ingestion/`: data ingestion, cleaning, and warehouse loading logic
+- `src/dashboard/`: Streamlit dashboard application
+- `terraform/`: Infrastructure as Code modules for GCP deployment
+- `dbt/`: optional dbt transformation project for data modeling
+- `docker-compose.yml`: local development stack configuration
+- `Dockerfile`: dashboard container image definition
+- `test_pipeline.py`: automated pipeline validation script
+
 ## Docker Container
 
 The dashboard can also be built directly from the included [Dockerfile](Dockerfile):
@@ -359,18 +371,6 @@ docker run -p 8080:8080 \
 ```
 
 For Cloud Run, the Terraform module sets the BigQuery environment variables and uses the Cloud Run service account instead of a mounted local key file.
-
-## Project Structure
-
-- `data/data.csv`: raw ecommerce dataset
-- `data/processed_data.csv`: cleaned dataset generated locally
-- `src/ingestion/`: ingestion, cleaning, and warehouse loading logic
-- `src/dashboard/`: Streamlit dashboard
-- `terraform/`: Terraform IaC modules
-- `dbt/`: optional dbt transformation project
-- `docker-compose.yml`: local demo setup
-- `Dockerfile`: dashboard container definition
-- `test_pipeline.py`: local validation script
 
 ## Dataset
 
